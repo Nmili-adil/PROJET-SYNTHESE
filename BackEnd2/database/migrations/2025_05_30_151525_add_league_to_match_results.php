@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('match_results', function (Blueprint $table) {
-            $table->string('league')->after('id');
-        });
+        if (!Schema::hasColumn('match_results', 'league')) {
+            Schema::table('match_results', function (Blueprint $table) {
+                $table->string('league')->after('id');
+            });
+        }
     }
 
     /**
