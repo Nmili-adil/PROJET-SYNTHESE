@@ -1,16 +1,14 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { Input } from "@/components/ui/input";
-import { Search, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
-import { CART, PRODUCT_DETAIL, STORE } from "../../router/Router";
+import { Search, Loader2, ShoppingCart, Heart } from "lucide-react";
+import { CART, PRODUCT_DETAIL, STORE, WISHLIST } from "../../router/paths";
 import { DropDownLogin } from "./DropDownLogin";
 import { useClientContext } from "../../../api/context/ClientContext";
 import { HoverCardClient } from "../ui/hoverCardClient";
 import { useCartContext } from "../../../api/context/CartContext";
 import Product from "../../../service/Product";
 import { useSearchParams } from "react-router-dom";
+import ThemeToggle from "../ThemeToggle";
 
 const StoreNav = () => {
   const navigate = useNavigate();
@@ -22,6 +20,21 @@ const StoreNav = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef(null);
+  const [wishlistCount, setWishlistCount] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('wishlist') || '[]').length; } catch { return 0; }
+  });
+
+  useEffect(() => {
+    const syncWishlist = () => {
+      try { setWishlistCount(JSON.parse(localStorage.getItem('wishlist') || '[]').length); } catch {}
+    };
+    window.addEventListener('storage', syncWishlist);
+    window.addEventListener('wishlist-updated', syncWishlist);
+    return () => {
+      window.removeEventListener('storage', syncWishlist);
+      window.removeEventListener('wishlist-updated', syncWishlist);
+    };
+  }, []);
 
   useEffect(() => {
     const handleCartUpdate = () => {
@@ -87,91 +100,85 @@ const StoreNav = () => {
   };
 
   return (
-    <nav className="h-28 w-screen flex flex-col fixed top-0 left-0 items-center z-50 shadow-md border-b-2 border-gray-400">
-      <div className="bg-purple-900 py-2 h-1/3 w-full flex items-center justify-end pe-16">
-        <p className="text-gray-200 font-normal text-xs">
-          Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!{" "}
-          <Link to={STORE} className="text-white font-normal ms-1 underline">
-            Shop Now
-          </Link>
-        </p>
-      </div>
-      <div className="bg-white h-2/3 w-full flex items-center justify-end">
-        <div className="flex items-center justify-end pe-16">
-          <div ref={searchRef} className="relative w-77">
-            <form onSubmit={handleSearch} className="relative">
-              <Input 
-                type="text" 
-                placeholder="Search products..." 
-                className="w-full pr-10" 
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setShowResults(true);
-                }}
-                onFocus={() => setShowResults(true)}
-              />
-              <button 
-                type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+    <nav className="h-16 w-screen flex items-center fixed top-0 left-0 z-50 bg-[#151317]/95 backdrop-blur-xl border-b border-outline-variant">
+      {/* Logo */}
+      <button onClick={() => navigate(STORE)} className="flex items-center gap-2 pl-8 pr-6 flex-shrink-0">
+        <img src="/logo.png" alt="logo" className="w-9 h-9 object-cover" />
+        <span className="font-headline font-black text-secondary uppercase tracking-tighter text-lg hidden sm:block">Kinetic Court</span>
+      </button>
+
+      {/* Spacer */}
+      <div className="flex-1" />
+
+      {/* Search */}
+      <div ref={searchRef} className="relative hidden md:block w-64 lg:w-80 mr-4">
+        <form onSubmit={handleSearch} className="relative">
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="w-full pl-4 pr-10 py-2 bg-surface-container border border-outline-variant text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-secondary transition-colors"
+            value={searchTerm}
+            onChange={(e) => { setSearchTerm(e.target.value); setShowResults(true); }}
+            onFocus={() => setShowResults(true)}
+          />
+          <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-secondary transition-colors">
+            {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+          </button>
+        </form>
+
+        {/* Search Results */}
+        {showResults && searchResults.length > 0 && (
+          <div className="absolute top-full left-0 right-0 mt-1 bg-surface-container-high border border-outline-variant max-h-80 overflow-y-auto z-50 shadow-xl">
+            {searchResults.map((product) => (
+              <button
+                key={product.id}
+                onClick={() => handleProductClick(product)}
+                className="w-full flex items-center gap-3 p-3 hover:bg-surface-container-highest text-left border-b border-outline-variant last:border-0 transition-colors"
               >
-                {isSearching ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Search className="w-4 h-4" />
-                )}
+                <div className="flex-1">
+                  <p className="text-xs font-medium text-on-surface">{product.name}</p>
+                  <p className="text-xs text-secondary">${product.price}</p>
+                </div>
               </button>
-            </form>
-
-            {/* Search Results Dropdown */}
-            {showResults && searchResults.length > 0 && (
-              <div 
-                className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-y-auto z-50"
-                style={{
-                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url(${import.meta.env.VITE_BACKEND_URL}/${searchResults[0].image_url})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat'
-                }}
-              >
-                {searchResults.map((product) => (
-                  <div
-                    key={product.id}
-                    onClick={() => handleProductClick(product)}
-                    className="flex items-center justify-between p-3 hover:bg-gray-50/80 cursor-pointer border-b border-gray-100 last:border-b-0 backdrop-blur-sm"
-                  >
-                    <div className="flex-1">
-                      <p className="font-medium text-sm text-gray-900">{product.name}</p>
-                      <p className="text-sm text-purple-600">${product.price}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            ))}
           </div>
-          <Button 
-            className="mx-2 relative" 
-            variant="outline"
-            onClick={() => navigate(CART)}
-          >
-            <ShoppingCart className="w-4 h-4" />
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center font-bold">
-                {cartCount}
-              </span>
-            )}
-          </Button>
-          {
-            authenticated ? (
-              <HoverCardClient />
-            ) : (
-              <DropDownLogin />
-            )
-          }
-        </div>
+        )}
       </div>
 
-      <img onClick={() => navigate(STORE)} src="/logo.png" alt="logo" className="w-16 cursor-pointer object-cover h-16 absolute top-1/2 left-16 -translate-y-1/2" />
+      {/* Wishlist */}
+      <button
+        onClick={() => navigate(WISHLIST)}
+        className="relative p-2.5 mx-1 text-on-surface-variant hover:text-secondary transition-colors"
+        title="Wishlist"
+      >
+        <Heart className="w-5 h-5" />
+        {wishlistCount > 0 && (
+          <span className="absolute top-1 right-1 w-4 h-4 bg-primary-container text-primary rounded-full text-[10px] flex items-center justify-center font-bold">
+            {wishlistCount}
+          </span>
+        )}
+      </button>
+
+      {/* Cart */}
+      <button
+        onClick={() => navigate(CART)}
+        className="relative p-2.5 mx-1 text-on-surface-variant hover:text-secondary transition-colors"
+      >
+        <ShoppingCart className="w-5 h-5" />
+        {cartCount > 0 && (
+          <span className="absolute top-1 right-1 w-4 h-4 bg-secondary text-on-secondary rounded-full text-[10px] flex items-center justify-center font-bold">
+            {cartCount}
+          </span>
+        )}
+      </button>
+
+      {/* Theme toggle */}
+      <ThemeToggle />
+
+      {/* Auth */}
+      <div className="pr-6">
+        {authenticated ? <HoverCardClient /> : <DropDownLogin />}
+      </div>
     </nav>
   );
 };

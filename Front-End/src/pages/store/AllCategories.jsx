@@ -14,15 +14,15 @@ const AllCategories = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0); // Remonter en haut de la page
-    axios.get('http://127.0.0.1:8000/api/categories')
+    axios.get('/api/categories')
       .then(response => setCategories(response.data))
       .catch(error => console.error("Erreur lors de la récupération des catégories :", error));
 
-    axios.get('http://127.0.0.1:8000/api/sub-categorie')
+    axios.get('/api/sub-categorie')
       .then(response => setSubcategories(response.data))
       .catch(error => console.error("Erreur lors de la récupération des sous-catégories :", error));
 
-    axios.get('http://localhost:8000/api/products')
+    axios.get('/api/products')
       .then(response => setProducts(response.data))
       .catch(error => console.error("Erreur lors de la récupération des produits :", error));
   }, []);
@@ -45,86 +45,105 @@ const AllCategories = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <StoreNav searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+    <div className="min-h-screen bg-surface text-on-surface">
+      {/* Page Header */}
+      <div className="bg-surface-container-low border-b border-outline-variant px-8 py-12">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-xs text-secondary uppercase tracking-widest font-semibold mb-2">Store</p>
+          <h1 className="text-4xl md:text-5xl font-headline font-black uppercase tracking-tighter">Shop by Category</h1>
+          <p className="text-on-surface-variant mt-2 text-sm">Explore our full collection</p>
+        </div>
+      </div>
 
-      <div className="container mx-auto px-4 py-8 mt-28">
-        <h1 className="text-4xl font-bold text-center mb-12">All Categories</h1>
-
-        {/* Grille des catégories */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
+        {/* Category Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
-            <div key={category.id} className="flex flex-col items-center">
+            <div key={category.id} className="flex flex-col">
+              {/* Category Card */}
               <div
-                className="group relative w-[300px] h-[300px] bg-white rounded-xl overflow-hidden shadow-md cursor-pointer transition duration-500 hover:shadow-xl"
+                className="group relative aspect-square overflow-hidden cursor-pointer border border-outline-variant"
                 onClick={() => handleCategoryClick(category)}
               >
                 <img
-                  src={category.image || "/images/default.jpg"}
+                  src={category.image || '/images/default.jpg'}
                   alt={category.name}
-                  className="w-full  object-cover transform transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition duration-300 group-hover:bg-black/40">
-                  <h2 className="text-3xl font-semibold text-white transition-all duration-300 group-hover:scale-105 text-center">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition duration-300" />
+                <div className="absolute inset-0 flex flex-col items-start justify-end p-6">
+                  <h2 className="text-2xl font-headline font-black uppercase tracking-tighter text-white group-hover:text-secondary transition-colors duration-300">
                     {category.name}
                   </h2>
+                  <span className="mt-2 text-xs text-white/60 uppercase tracking-widest flex items-center gap-1 group-hover:text-secondary/80 transition-colors duration-300">
+                    Shop Now →
+                  </span>
                 </div>
+                {/* Hover overlay accent line */}
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-500" />
               </div>
 
-              {/* Sous-catégories */}
-              <div className="p-4 w-full text-center space-y-2 mt-2">
+              {/* Subcategories */}
+              <div className="flex flex-wrap gap-2 mt-3">
                 {subcategories
-                  .filter(sub => sub.category_id === category.id)
-                  .map(sub => (
-                    <p
+                  .filter((sub) => sub.category_id === category.id)
+                  .map((sub) => (
+                    <button
                       key={sub.id}
-                      className="text-gray-600 hover:text-purple-600 cursor-pointer transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleSubcategoryClick(sub);
                       }}
+                      className="text-xs text-on-surface-variant hover:text-secondary border border-outline-variant hover:border-secondary px-3 py-1.5 transition-colors"
                     >
                       {sub.name}
-                    </p>
+                    </button>
                   ))}
               </div>
             </div>
           ))}
         </div>
 
-        {/* Produits filtrés */}
-        {selectedCategory && (
+        {/* Filtered Products (when category selected) */}
+        {selectedCategory && filteredProducts.length > 0 && (
           <div className="mt-16">
-            <h2 className="text-3xl font-bold mb-8 text-center">
-              Products in {selectedCategory.name}
-            </h2>
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <p className="text-xs text-secondary uppercase tracking-widest font-semibold mb-1">Collection</p>
+                <h2 className="text-3xl font-headline font-black uppercase tracking-tighter">
+                  {selectedCategory.name}
+                </h2>
+              </div>
+              <span className="text-sm text-on-surface-variant">{filteredProducts.length} products</span>
+            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {filteredProducts.map(product => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {filteredProducts.map((product) => (
                 <div
                   key={product.id}
                   onClick={() => navigate(PRODUCT_DETAIL(product.id))}
-                  className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center transition hover:-translate-y-1 hover:shadow-lg cursor-pointer relative"
+                  className="group border border-outline-variant bg-surface-container-low cursor-pointer hover:border-secondary transition-colors duration-300"
                 >
-                  <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                    -35%
-                  </span>
-                  <img
-                    src={JSON.parse(product.images)[0]}
-                    alt={product.name}
-                    className="w-32 h-32 object-contain mb-4"
-                  />
-                  <button className="bg-black text-white w-full py-2 rounded mb-3 flex items-center justify-center gap-2 hover:bg-gray-800 transition">
-                    🛒 Add To Cart
-                  </button>
-                  <p className="font-medium text-sm text-center">{product.name}</p>
-                  <div className="flex justify-center items-center gap-2 mt-1">
-                    <span className="text-red-600 font-semibold">{product.price} DH</span>
-                    {product.old_price && (
-                      <span className="line-through text-gray-400 text-sm">
-                        DH{product.old_price}
+                  <div className="relative aspect-square overflow-hidden bg-surface-container">
+                    <img
+                      src={JSON.parse(product.images)[0]}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute top-3 left-3">
+                      <span className="bg-secondary text-on-secondary text-xs font-bold px-2 py-1 uppercase tracking-wide">
+                        Sale
                       </span>
-                    )}
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <p className="font-semibold text-sm leading-snug mb-2">{product.name}</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-secondary font-bold text-sm">{product.price} DH</span>
+                      {product.old_price && (
+                        <span className="line-through text-on-surface-variant text-xs">{product.old_price} DH</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

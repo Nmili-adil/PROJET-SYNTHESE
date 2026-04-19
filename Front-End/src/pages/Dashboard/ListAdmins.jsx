@@ -12,7 +12,7 @@ import {
 import AdminApi from "../../../service/Admins";
 import { toast } from "react-hot-toast";
 import AdminsTable from "../../components/Partials/AdminsTable";
-import { ADMIN_CREATE } from "../../router/Router";
+import { ADMIN_CREATE } from "../../router/paths";
 import { Search } from "lucide-react";
 export default function ListAdmins() {
   const [admins, setAdmins] = useState([]);

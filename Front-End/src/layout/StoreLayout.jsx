@@ -7,9 +7,9 @@ import FooterNav from "@/components/Partials/FooterNav"
 
 function StoreLayout() {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col min-h-screen bg-surface text-on-surface">
       <StoreNav/>
-      <main className="bg-gray-50 min-h-[100vh] w-full relative pt-16">
+      <main className="flex-1 w-full pt-16">
         <Outlet />
       </main>
       <Footer/>

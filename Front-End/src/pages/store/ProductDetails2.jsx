@@ -7,8 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
-import { ALLPRODUCTS, LOGINSTORE, PRODUCT_DETAIL } from "../../router/Router";
-import { Button } from "../../components/ui/button";
+import { ALLPRODUCTS, LOGINSTORE, PRODUCT_DETAIL } from "../../router/paths";
 import { ArrowBigLeft } from "lucide-react";
 import { useClientContext } from "../../../api/context/ClientContext";
 import { useCartContext } from "../../../api/context/CartContext";
@@ -164,16 +163,16 @@ const ProductDetails2 = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-16 h-16 border-4 border-purple-900 border-t-yellow-500 rounded-full animate-spin"></div>
+      <div className="flex items-center justify-center min-h-screen bg-surface">
+        <div className="w-16 h-16 border-4 border-outline-variant border-t-secondary rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-xl text-gray-600">Product not found</div>
+      <div className="flex items-center justify-center min-h-screen bg-surface">
+        <div className="text-xl text-on-surface-variant">Product not found</div>
       </div>
     );
   }
@@ -181,15 +180,15 @@ const ProductDetails2 = () => {
   const totalPrice = product.price * quantity;
 
   return (
-    <div className="bg-gray-50 min-h-[100vh] relative pt-20 p-8 flex flex-col items-center gap-4">
+    <div className="bg-surface text-on-surface min-h-screen relative pt-4 p-8 flex flex-col items-center gap-4">
       <div className="text-right pr-26 w-full">
-        <Button onClick={handleRedirect}>
-          <ArrowBigLeft />
-          All Product
-        </Button>
+        <button onClick={handleRedirect} className="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors text-sm font-medium">
+          <ArrowBigLeft className="w-4 h-4" />
+          All Products
+        </button>
       </div>
       {/* Product Main Card */}
-      <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-lg p-8 w-full max-w-5xl mb-8">
+      <div className="flex flex-col md:flex-row bg-surface-container-low border border-outline-variant p-8 w-full max-w-5xl mb-8">
         {/* Image Gallery */}
         <div className="flex flex-col items-center md:w-1/2">
           <img
@@ -216,28 +215,28 @@ const ProductDetails2 = () => {
         {/* Product Info */}
         <div className="md:w-1/2 md:pl-10 flex flex-col gap-4">
           <div>
-            <h2 className="text-2xl font-bold">{product.name}</h2>
-            <p className="text-gray-400 font-medium mb-1">{product.brand}</p>
+            <h2 className="text-2xl font-headline font-black uppercase tracking-tighter text-on-surface">{product.name}</h2>
+            <p className="text-on-surface-variant font-medium mb-1">{product.brand}</p>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl font-semibold">${product.price}</span>
-              <span className="flex text-yellow-400">
+              <span className="text-2xl font-semibold text-secondary">${product.price}</span>
+              <span className="flex text-secondary">
                 {"★".repeat(Math.floor(product.rating || 0))}
                 {"☆".repeat(5 - Math.floor(product.rating || 0))}
               </span>
-              <span className="text-gray-500 ml-2">
+              <span className="text-on-surface-variant ml-2">
                 ({product.rating || 0})
               </span>
             </div>
           </div>
           {/* Tabs */}
-          <div className="flex gap-4 border-b mb-2">
+          <div className="flex gap-4 border-b border-outline-variant mb-2">
             {["description", "details", "comments"].map((t) => (
               <button
                 key={t}
-                className={`pb-2 px-2 capitalize font-medium ${
+                className={`pb-2 px-2 capitalize font-medium transition-colors ${
                   tab === t
-                    ? "border-b-2 border-yellow-400 text-black"
-                    : "text-gray-400"
+                    ? "border-b-2 border-secondary text-on-surface"
+                    : "text-on-surface-variant hover:text-on-surface"
                 }`}
                 onClick={() => setTab(t)}
               >
@@ -245,16 +244,16 @@ const ProductDetails2 = () => {
               </button>
             ))}
           </div>
-          <div className="min-h-[60px] text-gray-700">
+          <div className="min-h-[60px] text-on-surface-variant">
             {tab === "description" && <p>{product.description}</p>}
             {tab === "details" && <p>{product.details}</p>}
             {tab === "comments" && (
               <ul className="space-y-1">
                 {product.comments?.map((c, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm">
-                    <span className="font-semibold">{c.user}:</span>
+                    <span className="font-semibold text-on-surface">{c.user}:</span>
                     <span>{c.comment}</span>
-                    <span className="text-yellow-400">
+                    <span className="text-secondary">
                       {"★".repeat(c.rating)}
                     </span>
                   </li>
@@ -265,9 +264,9 @@ const ProductDetails2 = () => {
           {/* Color, Quantity, Total */}
           <div className="flex gap-4 items-center mt-2">
             <div>
-              <span className="block text-xs text-gray-400">COLOR</span>
+              <span className="block text-xs text-on-surface-variant">COLOR</span>
               <select
-                className="border rounded px-2 py-1"
+                className="bg-surface-container border border-outline-variant text-on-surface px-2 py-1 focus:outline-none focus:border-secondary"
                 value={selectedColor}
                 onChange={(e) => setSelectedColor(e.target.value)}
               >
@@ -279,37 +278,37 @@ const ProductDetails2 = () => {
               </select>
             </div>
             <div>
-              <span className="block text-xs text-gray-400">QUANTITY</span>
+              <span className="block text-xs text-on-surface-variant">QUANTITY</span>
               <input
                 type="number"
                 min={1}
                 max={product.stock}
                 value={quantity}
                 onChange={(e) => setQuantity(Number(e.target.value))}
-                className="border rounded px-2 py-1 w-16"
+                className="bg-surface-container border border-outline-variant text-on-surface px-2 py-1 w-16 focus:outline-none focus:border-secondary"
               />
             </div>
             <div>
-              <span className="block text-xs text-gray-400">TOTAL PRICE</span>
-              <span className="font-semibold">${totalPrice.toFixed(2)}</span>
+              <span className="block text-xs text-on-surface-variant">TOTAL PRICE</span>
+              <span className="font-semibold text-secondary">${totalPrice.toFixed(2)}</span>
             </div>
           </div>
           {/* Buttons */}
           <div className="flex gap-2 mt-4">
-            <Button
-              className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-6 rounded-lg flex-1 transition"
+            <button
+              className="bg-secondary hover:bg-secondary-container text-on-secondary font-bold py-3 px-6 flex-1 transition uppercase tracking-widest text-sm"
               onClick={handleAddToCart}
               disabled={addingToCart}
             >
               {addingToCart ? "ADDING..." : "ADD TO CART"}
-            </Button>
-            <Button className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-lg">
+            </button>
+            <button className="border border-outline-variant hover:border-secondary text-on-surface-variant hover:text-secondary py-3 px-4 transition">
               ♡
-            </Button>
+            </button>
           </div>
           {/* Stock/Shipping Info */}
-          <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
-            <span>✔</span>
+          <div className="flex items-center gap-2 mt-2 text-sm text-on-surface-variant">
+            <span className="text-green-400">✔</span>
             <span>{product.shipping || "Free shipping available"}</span>
           </div>
         </div>
@@ -317,7 +316,7 @@ const ProductDetails2 = () => {
       {/* Similar Products */}
       {similarProducts.length > 0 && (
         <div className="w-full max-w-5xl mb-8">
-          <h3 className="text-lg font-bold mb-4">Similar Products</h3>
+          <h3 className="font-headline font-black uppercase tracking-tighter text-on-surface text-xl mb-4">Similar Products</h3>
           <Swiper
             modules={[Navigation, Pagination]}
             spaceBetween={20}
@@ -344,7 +343,7 @@ const ProductDetails2 = () => {
             {similarProducts.map((prod) => (
               <SwiperSlide key={prod.id}>
                 <div
-                  className="bg-white rounded-xl shadow p-3 flex flex-col items-center cursor-pointer hover:shadow-lg transition h-full"
+                  className="bg-surface-container-low border border-outline-variant p-3 flex flex-col items-center cursor-pointer hover:border-secondary transition h-full"
                   onClick={() => handleSimilarProductClick(prod.id)}
                 >
                   <img
@@ -352,10 +351,10 @@ const ProductDetails2 = () => {
                     alt="Product image"
                     className="w-32 h-32 object-contain mb-2"
                   />
-                  <span className="font-semibold text-sm text-center mb-1 truncate w-full">
+                  <span className="text-sm text-center mb-1 truncate w-full text-on-surface">
                     {prod.name}
                   </span>
-                  <span className="text-yellow-400 font-bold">
+                  <span className="text-secondary font-bold">
                     ${prod.price}
                   </span>
                 </div>

@@ -19,13 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import Loading from "@/components/Partials/loading";
 import DialogProductOrder from "../../components/Partials/DialogProductOrder";
 import { Search } from "lucide-react";
@@ -105,139 +98,119 @@ export default function OrdersPage() {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const statusStyle = (s) => ({
+    waiting:   "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400",
+    delivered: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400",
+    returned:  "bg-red-50 text-red-500 dark:bg-red-900/20 dark:text-red-400",
+  }[s] || "bg-slate-100 text-slate-500");
+
   return (
-    <div className="p-6 space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Orders Management</CardTitle>
-          <CardDescription>
-            Manage and track all orders in the system
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-4 mb-6 border-b-2 border-slate-700 pb-4 w-full flex-row items-center justify-between">
-            <div className="relative w-1/2">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by order code, product, or customer..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 bg-transparent dark:text-white border-slate-700"
-              />
-            </div>
-            <Select
-              value={statusFilter}
-              onValueChange={setStatusFilter}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="waiting">Waiting</SelectItem>
-                <SelectItem value="delivered">Delivered</SelectItem>
-                <SelectItem value="returned">Returned</SelectItem>
-              </SelectContent>
-            </Select>
+    <div className="p-6 max-w-[1400px] mx-auto space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">Orders</h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Manage and track all customer orders</p>
+      </div>
+
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-800 p-5">
+        <div className="flex flex-col sm:flex-row gap-3 mb-5 pb-4 border-b border-slate-200 dark:border-slate-700/60">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+            <Input
+              placeholder="Search by product or customer..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 bg-transparent dark:text-white border-slate-300 dark:border-slate-700"
+            />
           </div>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="waiting">Waiting</SelectItem>
+              <SelectItem value="delivered">Delivered</SelectItem>
+              <SelectItem value="returned">Returned</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-          {loading ? (
-            <Loading />
-          ) : (
-            <Table>
-              <TableCaption>A list of all orders</TableCaption>
-              <TableHeader>
+        {loading ? (
+          <Loading />
+        ) : (
+          <Table>
+            <TableCaption>
+              {filteredOrders.length} order{filteredOrders.length !== 1 ? "s" : ""} found
+            </TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-12">#</TableHead>
+                <TableHead>Customer</TableHead>
+                <TableHead>Products</TableHead>
+                <TableHead>Total</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {currentOrders.length === 0 ? (
                 <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Products</TableHead>
-                  <TableHead>Total Amount</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <td colSpan={6} className="h-24 text-center text-sm text-slate-400">No orders match your filters.</td>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {currentOrders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium">{order.id}</TableCell>
-                    <TableCell>
-                      {order.client ? 
-                        `${order.client.first_name} ${order.client.last_name}` : 
-                        'N/A'}
-                    </TableCell>
-                    <TableCell>
-                      <DialogProductOrder products={order.products || []} />
-                    </TableCell>
-                    <TableCell>{order.total_amount} €</TableCell>
-                    <TableCell>
-                      <Select
-                        value={order.status}
-                        onValueChange={(value) => handleStatusChange(order.id, value)}
-                      >
-                        <SelectTrigger className="w-[130px]">
-                          <SelectValue>
-                            <span
-                              className={`px-2 py-1 rounded-full text-white text-xs ${
-                                order.status === "delivered"
-                                  ? "bg-green-500"
-                                  : order.status === "waiting"
-                                  ? "bg-yellow-500"
-                                  : "bg-red-500"
-                              }`}
-                            >
-                              {order.status}
-                            </span>
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="waiting">Waiting</SelectItem>
-                          <SelectItem value="delivered">Delivered</SelectItem>
-                          <SelectItem value="returned">Returned</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="destructive"
-                        onClick={() => handleDelete(order.id)}
-                      >
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
+              ) : currentOrders.map((order) => (
+                <TableRow key={order.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/20">
+                  <TableCell className="font-mono text-xs text-slate-400">{order.id}</TableCell>
+                  <TableCell className="font-medium text-slate-700 dark:text-slate-200">
+                    {order.client ? `${order.client.first_name} ${order.client.last_name}` : "N/A"}
+                  </TableCell>
+                  <TableCell>
+                    <DialogProductOrder products={order.products || []} />
+                  </TableCell>
+                  <TableCell className="font-semibold text-slate-700 dark:text-slate-200">
+                    ${parseFloat(order.total_amount || 0).toFixed(2)}
+                  </TableCell>
+                  <TableCell>
+                    <Select value={order.status} onValueChange={(v) => handleStatusChange(order.id, v)}>
+                      <SelectTrigger className="w-[130px] h-8 text-xs border-0 p-0 shadow-none focus:ring-0">
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${statusStyle(order.status)}`}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
+                          {order.status}
+                        </span>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="waiting">Waiting</SelectItem>
+                        <SelectItem value="delivered">Delivered</SelectItem>
+                        <SelectItem value="returned">Returned</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="destructive" size="sm" onClick={() => handleDelete(order.id)}>
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
 
-          {/* Pagination Controls */}
-          <div className={loading ? "hidden" : "flex justify-center items-center space-x-2 mt-4"}>
-            <Button
-              variant="outline"
-              onClick={() => paginate(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
+        {!loading && totalPages > 1 && (
+          <div className="flex justify-center items-center gap-1 mt-5 pt-4 border-t border-slate-200 dark:border-slate-700/60">
+            <Button variant="outline" size="sm" onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
               Previous
             </Button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
-              <Button
-                key={number}
-                variant={currentPage === number ? "default" : "outline"}
-                onClick={() => paginate(number)}
-              >
-                {number}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+              <Button key={n} size="sm" variant={currentPage === n ? "default" : "outline"} onClick={() => paginate(n)}>
+                {n}
               </Button>
             ))}
-            <Button
-              variant="outline"
-              onClick={() => paginate(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
+            <Button variant="outline" size="sm" onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages}>
               Next
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        )}
+      </div>
     </div>
   );
 } 

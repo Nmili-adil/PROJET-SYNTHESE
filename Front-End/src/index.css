@@ -5,6 +5,32 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* ── KINETIC COURT – LIGHT palette ── */
+  --kc-secondary:                  #c98a00;
+  --kc-secondary-container:        #a87200;
+  --kc-on-secondary:               #ffffff;
+  --kc-on-secondary-container:     #ffffff;
+  --kc-primary:                    #552583;
+  --kc-primary-container:          #ecdcff;
+  --kc-on-primary:                 #ffffff;
+  --kc-on-primary-container:       #380064;
+  --kc-surface:                    #faf9fb;
+  --kc-surface-dim:                #dbd9de;
+  --kc-surface-bright:             #faf9fb;
+  --kc-surface-variant:            #e8e0ec;
+  --kc-surface-container-lowest:   #ffffff;
+  --kc-surface-container-low:      #f4f2f7;
+  --kc-surface-container:          #eeeaef;
+  --kc-surface-container-high:     #e8e4ea;
+  --kc-surface-container-highest:  #e1dbe5;
+  --kc-on-surface:                 #1c1a1e;
+  --kc-on-surface-variant:         #48454a;
+  --kc-outline:                    #7a7380;
+  --kc-outline-variant:            #cbc4cf;
+  --kc-tertiary-container:         #ffd7f0;
+  --kc-error:                      #ba1a1a;
+  --kc-error-container:            #ffdad6;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
@@ -41,6 +67,32 @@
 }
 
 .dark {
+  /* ── KINETIC COURT – DARK palette ── */
+  --kc-secondary:                  #ffbe3c;
+  --kc-secondary-container:        #e3a200;
+  --kc-on-secondary:               #422d00;
+  --kc-on-secondary-container:     #583c00;
+  --kc-primary:                    #ddb8ff;
+  --kc-primary-container:          #552583;
+  --kc-on-primary:                 #461274;
+  --kc-on-primary-container:       #c794f8;
+  --kc-surface:                    #151317;
+  --kc-surface-dim:                #151317;
+  --kc-surface-bright:             #3b383d;
+  --kc-surface-variant:            #373438;
+  --kc-surface-container-lowest:   #0f0d11;
+  --kc-surface-container-low:      #1d1b1f;
+  --kc-surface-container:          #211f23;
+  --kc-surface-container-high:     #2c292d;
+  --kc-surface-container-highest:  #373438;
+  --kc-on-surface:                 #e7e1e6;
+  --kc-on-surface-variant:         #cec3d2;
+  --kc-outline:                    #978d9c;
+  --kc-outline-variant:            #4b4450;
+  --kc-tertiary-container:         #68225c;
+  --kc-error:                      #ffb4ab;
+  --kc-error-container:            #93000a;
+
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.129 0.042 264.695);
@@ -112,6 +164,76 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* ── KINETIC COURT palette ── */
+  /* Secondary = amber/gold */
+  --color-secondary: var(--kc-secondary);
+  --color-secondary-container: var(--kc-secondary-container);
+  --color-secondary-fixed: #ffdea9;
+  --color-secondary-fixed-dim: #ffba29;
+  --color-on-secondary: var(--kc-on-secondary);
+  --color-on-secondary-container: var(--kc-on-secondary-container);
+  --color-on-secondary-fixed: #271900;
+  --color-on-secondary-fixed-variant: #5e4100;
+
+  /* Primary = lavender/purple */
+  --color-primary: var(--kc-primary);
+  --color-primary-container: var(--kc-primary-container);
+  --color-primary-fixed: #f0dbff;
+  --color-primary-fixed-dim: #ddb8ff;
+  --color-on-primary: var(--kc-on-primary);
+  --color-on-primary-container: var(--kc-on-primary-container);
+  --color-on-primary-fixed: #2c0051;
+  --color-on-primary-fixed-variant: #5e2e8c;
+  --color-inverse-primary: #7748a6;
+
+  /* Surface tokens */
+  --color-surface: var(--kc-surface);
+  --color-surface-dim: var(--kc-surface-dim);
+  --color-surface-bright: var(--kc-surface-bright);
+  --color-surface-variant: var(--kc-surface-variant);
+  --color-surface-container-lowest: var(--kc-surface-container-lowest);
+  --color-surface-container-low: var(--kc-surface-container-low);
+  --color-surface-container: var(--kc-surface-container);
+  --color-surface-container-high: var(--kc-surface-container-high);
+  --color-surface-container-highest: var(--kc-surface-container-highest);
+  --color-on-surface: var(--kc-on-surface);
+  --color-on-surface-variant: var(--kc-on-surface-variant);
+  --color-surface-tint: var(--kc-primary);
+
+  /* Tertiary = pink */
+  --color-tertiary: #fface8;
+  --color-tertiary-container: var(--kc-tertiary-container);
+  --color-tertiary-fixed: #ffd7f0;
+  --color-tertiary-fixed-dim: #fface8;
+  --color-on-tertiary: #57124d;
+  --color-on-tertiary-container: #e48dce;
+  --color-on-tertiary-fixed: #3a0033;
+  --color-on-tertiary-fixed-variant: #722b65;
+
+  /* Outline */
+  --color-outline: var(--kc-outline);
+  --color-outline-variant: var(--kc-outline-variant);
+
+  /* Error */
+  --color-error: var(--kc-error);
+  --color-error-container: var(--kc-error-container);
+  --color-on-error: #690005;
+  --color-on-error-container: #ffdad6;
+
+  /* Inverse */
+  --color-inverse-surface: #e7e1e6;
+  --color-inverse-on-surface: #322f34;
+
+  /* Font families */
+  --font-headline: 'Epilogue', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+  --font-label: 'Manrope', sans-serif;
+
+  /* Animations */
+  --animate-slide: slide 20s linear infinite;
+  --animate-slide-reverse: slide 20s linear infinite reverse;
+  --animate-reveal: reveal 3s ease-in-out infinite;
 }
 
 @layer base {
@@ -121,6 +243,13 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Manrope', sans-serif;
+    background-color: var(--kc-surface);
+    color: var(--kc-on-surface);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Epilogue', sans-serif;
   }
 }
 
@@ -131,6 +260,16 @@
   text-overflow: ellipsis;
 }
 
+@keyframes slide {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes reveal {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.5; }
+  100% { opacity: 0; }
+}
 
 @keyframes fadeInUp {
   from {

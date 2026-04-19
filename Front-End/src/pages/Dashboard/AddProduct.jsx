@@ -2,7 +2,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCallback, useEffect, useState } from "react";
-import Hearder from "../../components/Partials/Hearder";
 import Categorie from "../../../service/Categorie";
 import {
   Select,
@@ -13,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import Product from "../../../service/Product";
@@ -140,194 +138,170 @@ function AddProduct() {
   };
 
   return (
-    <div className="px-4 flex flex-col gap-4 justify-center py-4 items-center">
-      <Hearder title={"Add Product"} />
+    <div className="p-6 max-w-[1000px] mx-auto space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">Add Product</h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Add a new product to the store inventory</p>
+      </div>
+
       <form
-        className="w-5/6 bg-white dark:bg-slate-950 border rounded-2xl p-4 grid grid-cols-2 gap-4 shadow-xl"
-        enctype="multipart/form-data"
+        className="rounded-2xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-800 p-6 space-y-6"
+        encType="multipart/form-data"
         onSubmit={handleSubmit}
       >
-        <div className="grid grid-cols-4 items-center ">
-          <Label htmlFor="name">Product name:</Label>
-          <Input
-            type="text"
-            name="name"
-            placeholder="Product name..."
-            className=" col-span-3"
-            id="name"
-            onChange={(e) => setProduct({ ...product, name: e.target.value })}
-          />
-        </div>
-        <div className="grid grid-cols-4 items-center ">
-          <Label htmlFor="productCode">Product code:</Label>
-          <Input
-            type="text"
-            name="product_code"
-            value={product.product_code}
-            disabled
-            className="col-span-3 bg-gray-100 dark:bg-slate-900 cursor-not-allowed"
-            id="productCode"
-          />
-        </div>
-        <div className="grid grid-cols-4 items-center ">
-          <Label htmlFor="price">Price:</Label>
-          <Input
-            type="number"
-            name="price"
-            placeholder="Product price..."
-            className=" col-span-3"
-            id="matricule"
-            onChange={(e) => setProduct({ ...product, price: e.target.value })}
-          />
-        </div>
-        <div className="grid grid-cols-4 items-center ">
-          <Label htmlFor="email">Product categorie:</Label>
-          <Select
-            onValueChange={(value) =>
-              setProduct({ ...product, category_id: Number(value) })
-            }
-          >
-            <SelectTrigger className="w-[300px]">
-              <SelectValue placeholder="Select a categorie" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Categories</SelectLabel>
-                {categories &&
-                  categories.map((categorie) => (
-                    <SelectItem
-                      key={categorie.id}
-                      value={categorie.id.toString()}
-                    >
-                      {categorie.name}
-                    </SelectItem>
-                  ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="grid grid-cols-4 gap-1 items-center ">
-          <Label htmlFor="sizes">Sizes:</Label>
-          <div className="col-span-3 grid grid-cols-4 gap-1">
-            {availableSizes.map((size) => (
-              <Label key={size} className="flex items-center space-x-2">
-                <Checkbox
-                  type="checkbox"
-                  checked={product.sizes.includes(size)}
-                  onCheckedChange={(e) => handleSizeChange(size)}
-                  className="w-4 h-4"
-                />
-                <span>{size}</span>
-              </Label>
-            ))}
-          </div>
-        </div>
-        <div className="grid grid-cols-4 gap-1 items-center">
-          <Label htmlFor="email">Product Sub-categorie:</Label>
-          <Select
-            onValueChange={(value) =>
-              setProduct({ ...product, sousCategorie: Number(value) })
-            }
-          >
-            <SelectTrigger className="w-[300px]">
-              <SelectValue placeholder="Select a sub-categorie" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Categories</SelectLabel>
-                {sousCategorie &&
-                  sousCategorie.map((categorie) => (
-                    <SelectItem
-                      key={categorie.id}
-                      value={categorie.id.toString()}
-                    >
-                      {categorie.name}
-                    </SelectItem>
-                  ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="grid grid-cols-4 gap-1 items-center  ">
-          <Label htmlFor="colors" className="col-span-1">
-            colors:
-          </Label>
-          <div className="col-span-3 grid grid-cols-4 gap-1 ">
-            {availableColors.map((color) => (
-              <Label key={color} className="flex items-center space-x-2">
-                <Checkbox
-                  type="checkbox"
-                  checked={product.colors.includes(color)}
-                  onCheckedChange={(e) => handleColorChange(color)}
-                  className="w-4 h-4"
-                />
-                <span>{color}</span>
-              </Label>
-            ))}
-          </div>
-        </div>
-        <div className="grid grid-cols-4 items-center ">
-          <Label htmlFor="quantity">Quantity:</Label>
-          <Input
-            type="number"
-            name="quantity"
-            placeholder="Product quantity..."
-            className=" col-span-3"
-            id="quantity"
-            onChange={(e) =>
-              setProduct({ ...product, quantity: e.target.value })
-            }
-          />
-        </div>
-        <div className="grid grid-cols-4 items-center ">
-          <Label htmlFor="images">Images:</Label>
-          <Input
-            type="file"
-            name="images[]"
-            className=" col-span-3"
-            id="images"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-        </div>
-        <div className="grid grid-cols-4 items-center ">
-          <Label htmlFor="images">Product description:</Label>
-          <Textarea
-            className=" col-span-3"
-            placeholder="Product description..."
-            value={product.description}
-            onChange={(e) =>
-              setProduct({ ...product, description: e.target.value })
-            }
-            name="description"
-            id="description"
-          ></Textarea>
-        </div>
-        <div className="grid grid-cols-4  gap-2">
-          {imagePreviews.map((src, index) => (
-            <div key={index} className="relative group">
-              <img
-                src={src}
-                alt="Preview"
-                className="w-20 h-20 object-cover rounded-lg shadow"
-              />
-
-              <Button
-                type="button"
-                onClick={() => handleRemoveImage(index)}
-                className="absolute top-0 right-5 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-              >
-                <X size={12} />
-              </Button>
+        {/* Basic Info */}
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700/60">
+            Basic Information
+          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="name" className="text-xs font-semibold text-slate-600 dark:text-slate-300">Product Name</Label>
+              <Input id="name" placeholder="Product name..." onChange={(e) => setProduct({ ...product, name: e.target.value })}
+                className="bg-transparent dark:text-white border-slate-300 dark:border-slate-700" />
             </div>
-          ))}
+            <div className="space-y-1.5">
+              <Label htmlFor="productCode" className="text-xs font-semibold text-slate-600 dark:text-slate-300">Product Code</Label>
+              <Input id="productCode" value={product.product_code} disabled
+                className="bg-slate-50 dark:bg-slate-700/40 cursor-not-allowed border-slate-300 dark:border-slate-700 text-slate-500" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="price" className="text-xs font-semibold text-slate-600 dark:text-slate-300">Price ($)</Label>
+              <Input id="price" type="number" placeholder="0.00" onChange={(e) => setProduct({ ...product, price: e.target.value })}
+                className="bg-transparent dark:text-white border-slate-300 dark:border-slate-700" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="quantity" className="text-xs font-semibold text-slate-600 dark:text-slate-300">Quantity</Label>
+              <Input id="quantity" type="number" placeholder="0" onChange={(e) => setProduct({ ...product, quantity: e.target.value })}
+                className="bg-transparent dark:text-white border-slate-300 dark:border-slate-700" />
+            </div>
+            <div className="col-span-2 space-y-1.5">
+              <Label htmlFor="description" className="text-xs font-semibold text-slate-600 dark:text-slate-300">Description</Label>
+              <Textarea id="description" placeholder="Product description..." value={product.description}
+                onChange={(e) => setProduct({ ...product, description: e.target.value })}
+                className="bg-transparent dark:text-white border-slate-300 dark:border-slate-700 min-h-[80px]" />
+            </div>
+          </div>
         </div>
-        <div className="flex justify-end col-span-2">
-          <Button
-            className="bg-primary dark:bg-slate-900 text-white px-4 py-2 rounded-md"
-            type="submit"
-          >
-            Save changes
+
+        {/* Categorization */}
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700/60">
+            Categorization
+          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold text-slate-600 dark:text-slate-300">Category</Label>
+              <Select onValueChange={(v) => setProduct({ ...product, category_id: Number(v) })}>
+                <SelectTrigger className="border-slate-300 dark:border-slate-700">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Categories</SelectLabel>
+                    {categories.map((c) => (
+                      <SelectItem key={c.id} value={c.id.toString()}>{c.name}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold text-slate-600 dark:text-slate-300">Sub-Category</Label>
+              <Select onValueChange={(v) => setProduct({ ...product, sousCategorie: Number(v) })}>
+                <SelectTrigger className="border-slate-300 dark:border-slate-700">
+                  <SelectValue placeholder="Select a sub-category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Sub-Categories</SelectLabel>
+                    {sousCategorie.map((c) => (
+                      <SelectItem key={c.id} value={c.id.toString()}>{c.name}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+        {/* Variants */}
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700/60">
+            Variants
+          </p>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold text-slate-600 dark:text-slate-300">Sizes</Label>
+              <div className="flex flex-wrap gap-2">
+                {availableSizes.map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => handleSizeChange(size)}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-colors ${
+                      product.sizes.includes(size)
+                        ? "bg-purple-600 border-purple-600 text-white"
+                        : "border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-purple-400"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold text-slate-600 dark:text-slate-300">Colors</Label>
+              <div className="flex flex-wrap gap-2">
+                {availableColors.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => handleColorChange(color)}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-colors ${
+                      product.colors.includes(color)
+                        ? "bg-purple-600 border-purple-600 text-white"
+                        : "border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-purple-400"
+                    }`}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Images */}
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700/60">
+            Images
+          </p>
+          <div className="space-y-3">
+            <Input type="file" accept="image/*" onChange={handleImageChange}
+              className="border-slate-300 dark:border-slate-700 file:text-xs file:font-semibold" />
+            {imagePreviews.length > 0 && (
+              <div className="flex flex-wrap gap-3 mt-2">
+                {imagePreviews.map((src, i) => (
+                  <div key={i} className="relative group">
+                    <img src={src} alt="" className="w-20 h-20 object-cover rounded-xl border border-slate-200 dark:border-slate-700" />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(i)}
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow"
+                    >
+                      <X size={10} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="flex justify-end pt-2 border-t border-slate-200 dark:border-slate-700/60">
+          <Button type="submit" className="bg-purple-600 hover:bg-purple-700 text-white px-6">
+            Save Product
           </Button>
         </div>
       </form>

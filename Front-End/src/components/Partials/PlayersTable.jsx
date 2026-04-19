@@ -13,7 +13,7 @@ import {
 import { toast } from "react-hot-toast";
 import { AlertDialog, AlertDialogTitle, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "../ui/alert-dialog";
 import { Link } from "react-router-dom";
-import { PLAYERS_EDIT } from "../../router/Router";
+import { PLAYERS_EDIT } from "../../router/paths";
   import Loading from "./loading";
 import {
   Tooltip,

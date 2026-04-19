@@ -106,7 +106,8 @@ export function Editproduct({ id, onEdit }) {
     
     // Parse the images and add the base URL to each image path
     const parsedImages = JSON.parse(productData.images || '[]');
-    const imagesWithBaseUrl = parsedImages.map(img => `http://localhost:8000/${img}`);
+    const backendBase = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+    const imagesWithBaseUrl = parsedImages.map(img => `${backendBase}/${img}`);
     setExistingImages(imagesWithBaseUrl);
     
     Categorie.getAll().then((res) => setCategories(res.data));
@@ -144,7 +145,8 @@ export function Editproduct({ id, onEdit }) {
     
     // Add existing images that weren't removed
     if (existingImages.length > 0) {
-      formData.append('existing_images', JSON.stringify(existingImages.map(img => img.replace('http://localhost:8000/', ''))));
+      const backendBase2 = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+      formData.append('existing_images', JSON.stringify(existingImages.map(img => img.replace(`${backendBase2}/`, ''))));
     } else {
       formData.append('existing_images', JSON.stringify([]));
     }

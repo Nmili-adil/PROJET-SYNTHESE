@@ -16,6 +16,7 @@ import LoginPage from "../pages/Dashboard/Login";
 import RegisterForm from "../pages/store/RegisterForm";
 import Checkout from '../pages/store/Checkout';
 import AllCategories from "../pages/store/AllCategories";
+import Wishlist from "../pages/store/Wishlist";
 
 import OrdersTable from "../pages/Dashboard/OrdersTable";
 import AddProduct from "../pages/Dashboard/AddProduct";
@@ -40,37 +41,10 @@ import NBANewsHub from "../pages/NewsPage";
 
 
 
-// Paths
-export const LOGINSTORE = "/store/login";
-export const REGISTERSTORE = "/store/register";
-export const HOME = "/";
-export const ABOUT = "/about";
-export const NEWS = "/news";
-export const STORE = "/store";
-export const DASHBOARD = "/dashboard";
-export const ADMIN = "/dashboard/admins";
-export const PRODUCT = "/dashboard/products";
-export const CATEGORIES = "/dashboard/categories";
-export const SUBCATEGORIES = "/dashboard/sub-categories";
-export const ORDERS = "/dashboard/orders";
-export const CREATE_ARTICLES = "/dashboard/news/create";
-export const ARTICLES_CONTENT = "/dashboard/news"
-export const CART = '/store/cart';
-export const CHECKOUT = '/store/checkout';
-export const ALLPRODUCTS = "/store/products";
-export const ALL_CATEGORIES = "/store/categories";
-export const PRODUCT_DETAIL = (id) => `/store/product-detail/${id}`;
-export const PRODUCT_CREATE = "/dashboard/products/create";
-export const TEXT_FILL_LOADING = "/text-fill-loading";
-export const ADMIN_CREATE = "/dashboard/admins/new";
-export const USER_DETAIL = "/dashboard/users";
-export const PLAYERS = "/dashboard/players";
-export const TEAMS = "/dashboard/teams";
-export const PLAYERS_CREATE = "/dashboard/players/new";
-export const PLAYERS_EDIT = (id) => `/dashboard/players/edit/${id}`;
-export const TEAMS_CREATE = "/dashboard/teams/new";
-export const LOGIN = "/login";
-export const MATCH_DETAIL = "/match-details/:id";
+// Paths — imported for local use and re-exported for consumers
+import * as Paths from "./paths";
+export * from "./paths";
+const { LOGINSTORE, REGISTERSTORE, HOME, ABOUT, NEWS, STORE, DASHBOARD, ADMIN, PRODUCT, CATEGORIES, SUBCATEGORIES, ORDERS, CREATE_ARTICLES, ARTICLES_CONTENT, CART, CHECKOUT, WISHLIST, ALLPRODUCTS, ALL_CATEGORIES, PRODUCT_DETAIL, PRODUCT_CREATE, TEXT_FILL_LOADING, ADMIN_CREATE, USER_DETAIL, PLAYERS, TEAMS, PLAYERS_CREATE, PLAYERS_EDIT, TEAMS_CREATE, LOGIN, MATCH_DETAIL } = Paths;
 
 // Router config
 export const router = createBrowserRouter([
@@ -92,6 +66,7 @@ export const router = createBrowserRouter([
             { path: ALLPRODUCTS, element: <Products/> },
             { path: ALL_CATEGORIES, element: <AllCategories /> },
             { path: CART , element: <Cart /> }, 
+            { path: WISHLIST, element: <Wishlist /> },
             { path: REGISTERSTORE, element: <RegisterForm /> },
             { path: LOGINSTORE, element: <LoginForm /> },
             { path: CHECKOUT, element: <Checkout /> },

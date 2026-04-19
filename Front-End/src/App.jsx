@@ -14,7 +14,7 @@ function App() {
       <ClientContext>
         <CartProvider>
         <Toaster position="bottom-right" />
-          <ThemeProvider forceTheme="light">
+          <ThemeProvider defaultTheme="dark" storageKey="kc-theme">
         <RouterProvider router={router} />
           </ThemeProvider>
         </CartProvider>

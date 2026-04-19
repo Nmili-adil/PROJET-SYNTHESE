@@ -1,13 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import ClientApi from "../../../service/Client";
 import { LOGINSTORE } from "@/router/Router";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useClientContext } from "../../../api/context/ClientContext";
-import { ALLPRODUCTS } from "../../router/Router";
-import { Progress } from "@/components/ui/progress";
+import { ALLPRODUCTS } from "../../router/paths";
+import { ArrowRight, ArrowLeft, Eye, EyeOff } from "lucide-react";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -113,141 +111,105 @@ const RegisterForm = () => {
     }
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const renderStep = () => {
+    const inputCls = "w-full px-4 py-3 bg-surface-container border border-outline-variant text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-secondary transition-colors disabled:opacity-50 text-sm";
     switch (currentStep) {
       case 1:
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Personal Information</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                type="text"
-                name="first_name"
-                placeholder="First Name"
-                value={formData.first_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, first_name: e.target.value })
-                }
-                required
-                disabled={loading}
-              />
-              <Input
-                type="text"
-                name="last_name"
-                placeholder="Last Name"
-                value={formData.last_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, last_name: e.target.value })
-                }
-                required
-                disabled={loading}
-              />
+            <div>
+              <p className="text-xs text-secondary uppercase tracking-widest font-semibold mb-1">Step 1 of 3</p>
+              <h3 className="text-xl font-headline font-black uppercase tracking-tighter">Personal Information</h3>
             </div>
-            <Input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              required
-              disabled={loading}
-            />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-on-surface-variant uppercase tracking-wider block mb-1.5">First Name</label>
+                <input type="text" name="first_name" placeholder="John" value={formData.first_name}
+                  onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                  required disabled={loading} className={inputCls} />
+              </div>
+              <div>
+                <label className="text-xs text-on-surface-variant uppercase tracking-wider block mb-1.5">Last Name</label>
+                <input type="text" name="last_name" placeholder="Doe" value={formData.last_name}
+                  onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                  required disabled={loading} className={inputCls} />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs text-on-surface-variant uppercase tracking-wider block mb-1.5">Email Address</label>
+              <input type="email" name="email" placeholder="you@example.com" value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required disabled={loading} className={inputCls} />
+            </div>
           </div>
         );
       case 2:
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Account Security</h3>
-            <Input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              required
-              disabled={loading}
-            />
-            <Input
-              type="password"
-              name="password_confirmation"
-              placeholder="Confirm Password"
-              value={formData.password_confirmation}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  password_confirmation: e.target.value,
-                })
-              }
-              required
-              disabled={loading}
-            />
-            <h3 className="text-lg font-semibold pt-4">Contact Information</h3>
-            <Input
-              type="tel"
-              name="phone"
-              placeholder="Phone Number"
-              value={formData.phone}
-              onChange={(e) =>
-                setFormData({ ...formData, phone: e.target.value })
-              }
-              required
-              disabled={loading}
-            />
-            <Input
-              type="text"
-              name="address"
-              placeholder="Address"
-              value={formData.address}
-              onChange={(e) =>
-                setFormData({ ...formData, address: e.target.value })
-              }
-              required
-              disabled={loading}
-            />
+            <div>
+              <p className="text-xs text-secondary uppercase tracking-widest font-semibold mb-1">Step 2 of 3</p>
+              <h3 className="text-xl font-headline font-black uppercase tracking-tighter">Security & Contact</h3>
+            </div>
+            <div>
+              <label className="text-xs text-on-surface-variant uppercase tracking-wider block mb-1.5">Password</label>
+              <div className="relative">
+                <input type={showPassword ? "text" : "password"} name="password" placeholder="Min. 8 characters" value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  required disabled={loading} className={`${inputCls} pr-12`} />
+                <button type="button" tabIndex={-1} onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors">
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+            <div>
+              <label className="text-xs text-on-surface-variant uppercase tracking-wider block mb-1.5">Confirm Password</label>
+              <input type="password" name="password_confirmation" placeholder="Repeat password" value={formData.password_confirmation}
+                onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
+                required disabled={loading} className={inputCls} />
+            </div>
+            <div>
+              <label className="text-xs text-on-surface-variant uppercase tracking-wider block mb-1.5">Phone Number</label>
+              <input type="tel" name="phone" placeholder="+1 (555) 000-0000" value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                required disabled={loading} className={inputCls} />
+            </div>
+            <div>
+              <label className="text-xs text-on-surface-variant uppercase tracking-wider block mb-1.5">Address</label>
+              <input type="text" name="address" placeholder="123 Main St" value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                required disabled={loading} className={inputCls} />
+            </div>
           </div>
         );
       case 3:
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Location Details</h3>
-            <div className="grid grid-cols-3 gap-4">
-              <Input
-                type="text"
-                name="city"
-                placeholder="City"
-                value={formData.city}
-                onChange={(e) =>
-                  setFormData({ ...formData, city: e.target.value })
-                }
-                required
-                disabled={loading}
-              />
-              <Input
-                type="text"
-                name="country"
-                placeholder="Country"
-                value={formData.country}
-                onChange={(e) =>
-                  setFormData({ ...formData, country: e.target.value })
-                }
-                required
-                disabled={loading}
-              />
-              <Input
-                type="text"
-                name="postal_code"
-                placeholder="Postal Code"
-                value={formData.postal_code}
-                onChange={(e) =>
-                  setFormData({ ...formData, postal_code: e.target.value })
-                }
-                required
-                disabled={loading}
-              />
+            <div>
+              <p className="text-xs text-secondary uppercase tracking-widest font-semibold mb-1">Step 3 of 3</p>
+              <h3 className="text-xl font-headline font-black uppercase tracking-tighter">Location Details</h3>
+            </div>
+            <div>
+              <label className="text-xs text-on-surface-variant uppercase tracking-wider block mb-1.5">City</label>
+              <input type="text" name="city" placeholder="Los Angeles" value={formData.city}
+                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                required disabled={loading} className={inputCls} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-on-surface-variant uppercase tracking-wider block mb-1.5">Country</label>
+                <input type="text" name="country" placeholder="United States" value={formData.country}
+                  onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                  required disabled={loading} className={inputCls} />
+              </div>
+              <div>
+                <label className="text-xs text-on-surface-variant uppercase tracking-wider block mb-1.5">Postal Code</label>
+                <input type="text" name="postal_code" placeholder="90001" value={formData.postal_code}
+                  onChange={(e) => setFormData({ ...formData, postal_code: e.target.value })}
+                  required disabled={loading} className={inputCls} />
+              </div>
             </div>
           </div>
         );
@@ -257,74 +219,101 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="h-full py-12 w-full flex items-center justify-center ">
-      <div className="w-2/3 h-4/5 flex flex-col gap-5">
-        <div className="w-full h-full">
-          <h2 className="text-2xl text-center">Create an account</h2>
-          <p className="text-md text-gray-700 text-center capitalize my-2">
-            Step {currentStep} of {totalSteps}
+    <div className="min-h-screen bg-surface text-on-surface flex">
+      {/* Left brand panel */}
+      <div
+        className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col items-center justify-center px-16"
+        style={{ background: "linear-gradient(135deg, #1a0a2e 0%, #2d1060 50%, #552583 100%)" }}
+      >
+        <div className="absolute top-0 left-0 w-80 h-80 rounded-full bg-secondary/5 -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-secondary/5 translate-x-1/3 translate-y-1/3" />
+        <div className="relative z-10 text-center">
+          <p className="text-xs text-secondary uppercase tracking-widest font-semibold mb-4">Kinetic Court</p>
+          <h1 className="text-5xl font-headline font-black uppercase tracking-tighter text-white leading-none mb-6">
+            Join The<br /><span className="text-secondary">Dynasty</span>
+          </h1>
+          <p className="text-white/60 text-sm leading-relaxed max-w-sm mx-auto">
+            Create your account and get exclusive access to merchandise, match updates, and member-only deals.
           </p>
-          <Progress value={progress} className="w-full mt-4" />
+          {/* Step indicators */}
+          <div className="mt-12 space-y-4">
+            {[['01', 'Personal Info'], ['02', 'Security & Contact'], ['03', 'Location']].map(([num, label], i) => (
+              <div key={num} className={`flex items-center gap-4 text-left ${currentStep > i ? 'opacity-100' : 'opacity-30'}`}>
+                <div className={`w-8 h-8 flex items-center justify-center text-xs font-bold ${currentStep > i ? 'bg-secondary text-on-secondary' : 'border border-white/30 text-white/60'}`}>
+                  {currentStep > i + 1 ? '✓' : num}
+                </div>
+                <span className={`text-sm ${currentStep === i + 1 ? 'text-secondary font-semibold' : 'text-white/60'}`}>{label}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="h-full w-full flex gap-3 relative border-gray-600 min-h-[400px] rounded-lg overflow-hidden shadow-md shadow-black">
-          <div className="w-1/2 ">
+      </div>
 
-          <img
-            src="/asset/drapo-2.jpg"
-            alt="Register"
-            className="h-full w-full object-cover"
-          />
+      {/* Right form panel */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-8 py-16 bg-surface">
+        <div className="w-full max-w-md">
+          {/* Progress bar */}
+          <div className="mb-8">
+            <div className="flex justify-between text-xs text-on-surface-variant mb-2">
+              <span>Progress</span>
+              <span>{Math.round(progress)}%</span>
+            </div>
+            <div className="w-full h-1 bg-surface-container-high">
+              <div
+                className="h-full bg-secondary transition-all duration-500"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="border absolute top-0 right-0 p-4 flex w-1/2 h-full flex-col justify-between gap-4"
-          >
-            <div className="flex-1 flex flex-col justify-center gap-4">
-              {renderStep()}
-              {error && (
-                <p className="text-xs text-red-500 italic">{error}</p>
-              )}
-              <div className="flex justify-between pt-4">
-                {currentStep > 1 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleBack}
-                    disabled={loading}
-                  >
-                    Back
-                  </Button>
-                )}
-                {currentStep < totalSteps ? (
-                  <Button
-                    type="button"
-                    onClick={handleNext}
-                    disabled={loading}
-                    className="ml-auto"
-                  >
-                    Next
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className="ml-auto"
-                  >
-                    {loading ? "Creating Account..." : "Create Account"}
-                  </Button>
-                )}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {renderStep()}
+
+            {error && (
+              <div className="px-4 py-3 bg-red-900/20 border border-red-400/30">
+                <p className="text-xs text-red-400">{error}</p>
               </div>
-            </div>
-            <div>
-              <p>
-                Already have an account?{" "}
-                <Button variant="link" onClick={() => navigate(LOGINSTORE)} disabled={loading}>
-                  Log in
-                </Button>
-              </p>
+            )}
+
+            <div className="flex justify-between items-center pt-2">
+              {currentStep > 1 ? (
+                <button type="button" onClick={handleBack} disabled={loading}
+                  className="flex items-center gap-2 px-5 py-2.5 border border-outline-variant text-on-surface-variant hover:text-on-surface hover:border-on-surface text-sm transition-colors disabled:opacity-40">
+                  <ArrowLeft size={14} /> Back
+                </button>
+              ) : (
+                <div />
+              )}
+              {currentStep < totalSteps ? (
+                <button type="button" onClick={handleNext} disabled={loading}
+                  className="flex items-center gap-2 px-6 py-2.5 bg-secondary text-on-secondary font-bold uppercase tracking-widest text-xs hover:bg-secondary-container transition-colors disabled:opacity-40">
+                  Continue <ArrowRight size={14} />
+                </button>
+              ) : (
+                <button type="submit" disabled={loading}
+                  className="flex items-center gap-2 px-6 py-2.5 bg-secondary text-on-secondary font-bold uppercase tracking-widest text-xs hover:bg-secondary-container transition-colors disabled:opacity-40">
+                  {loading ? (
+                    <>
+                      <div className="w-3 h-3 border border-on-secondary/30 border-t-on-secondary rounded-full animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>Create Account <ArrowRight size={14} /></>
+                  )}
+                </button>
+              )}
             </div>
           </form>
+
+          <div className="mt-8 pt-6 border-t border-outline-variant text-center">
+            <p className="text-on-surface-variant text-sm">
+              Already have an account?{' '}
+              <button onClick={() => navigate(LOGINSTORE)} disabled={loading}
+                className="text-secondary hover:text-secondary-container font-semibold transition-colors">
+                Sign In
+              </button>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -332,3 +321,4 @@ const RegisterForm = () => {
 };
 
 export default RegisterForm;
+

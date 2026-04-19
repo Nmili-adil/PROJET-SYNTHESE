@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Headers from "@/components/Partials/Hearder";
 import SubCategoriesTable from "@/components/Partials/SubCategoriesTable";
 import SubCategoryForm from "@/components/Partials/SubCategoryForm";
 import Loading from "../../components/Partials/loading";
@@ -13,9 +12,7 @@ import {
   SelectGroup,
   SelectLabel,
 } from "@/components/ui/select";
-
 import SubCategoriesApi from "../../../service/SubCategorie";
-
 
 const SubCategories = () => {
   const [loading, setLoading] = useState(true);
@@ -30,28 +27,23 @@ const SubCategories = () => {
   }, []);
 
   return (
-    <div>
-      <Headers title={"Sub-categories"} />
-      <div className="lg:w-[700px] sm:w-full mx-auto bg-white p-4 rounded-md dark:bg-slate-950 dark:border-slate-700 border-slate-300 border shadow-md">
-        {/* Category Filter */}
-        <div className="mb-4">
-          <label className="block mb-1 font-medium">Filter by Category:</label>
-
-          <Select
-            value={selectedCategory}
-            onValueChange={(value) => setSelectedCategory(value)} // keep value as string
-          >
-            <SelectTrigger className="w-[300px]">
+    <div className="p-6 max-w-[900px] mx-auto space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">Sub-Categories</h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Manage product sub-categories and their groupings</p>
+      </div>
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-800 p-5">
+        <div className="mb-5">
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Filter by Category</label>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-[260px]">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Categories</SelectLabel>
                 {categories.map((categorie) => (
-                  <SelectItem
-                    key={categorie.id}
-                    value={categorie.id.toString()} // ensure value is string
-                  >
+                  <SelectItem key={categorie.id} value={categorie.id.toString()}>
                     {categorie.name}
                   </SelectItem>
                 ))}
@@ -59,18 +51,13 @@ const SubCategories = () => {
             </SelectContent>
           </Select>
         </div>
-
         <Tabs defaultValue="sub-categories" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="sub-categories">Sub-categories</TabsTrigger>
-            <TabsTrigger value="create">Create new one</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 mb-4">
+            <TabsTrigger value="sub-categories">All Sub-Categories</TabsTrigger>
+            <TabsTrigger value="create">Create New</TabsTrigger>
           </TabsList>
           <TabsContent value="sub-categories">
-            {loading ? (
-              <Loading />
-            ) : (
-              <SubCategoriesTable selectedCategory={Number(selectedCategory)} />
-            )}
+            {loading ? <Loading /> : <SubCategoriesTable selectedCategory={Number(selectedCategory)} />}
           </TabsContent>
           <TabsContent value="create">
             <SubCategoryForm />

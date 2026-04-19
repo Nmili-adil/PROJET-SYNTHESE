@@ -78,7 +78,7 @@ const TeamForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full max-w-none">
       <CardHeader>
         <CardTitle>Los Angelos Lakers Team</CardTitle>
       </CardHeader>

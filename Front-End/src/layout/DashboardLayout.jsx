@@ -19,15 +19,13 @@ const navigate = useNavigate();
 const [isLoading, setIsLoading] = useState(true);
 
 useEffect(() => {
-      if (authenticated === true) {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 6000);
-      } else {
-          navigate('/login');
-      }
-
-}, [authenticated, isLoading]);
+    if (authenticated === true) {
+      const timer = setTimeout(() => setIsLoading(false), 2700);
+      return () => clearTimeout(timer);
+    } else if (authenticated === false) {
+      navigate('/login');
+    }
+}, [authenticated]);
 
 if (isLoading) {
     return (

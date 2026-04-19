@@ -340,20 +340,24 @@ console.log(response)
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-16 h-16 border-4 border-purple-900 border-t-yellow-500 rounded-full animate-spin"></div>
+      <div className="flex items-center justify-center min-h-screen bg-surface">
+        <div className="w-16 h-16 border-4 border-outline-variant border-t-secondary rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="min-h-screen bg-gray-50 py-8 px-4">
+    <form onSubmit={handleSubmit} className="min-h-screen bg-surface text-on-surface py-8 px-4">
       <div className="max-w-6xl pt-10 mx-auto">
-        <div className='flex item-center justify-between'>
-        <h1 className="text-2xl font-bold mb-8">Checkout</h1>
-        <Button onClick={()=> navigate(CART)}>
-          <ArrowBigLeft />
-          Return back</Button>
+        <div className='flex items-center justify-between mb-8'>
+          <div>
+            <p className="text-xs text-secondary uppercase tracking-widest font-body mb-1">Secure Checkout</p>
+            <h1 className="font-headline font-black text-3xl uppercase tracking-tighter text-on-surface">Complete Your Order</h1>
+          </div>
+          <button type="button" onClick={()=> navigate(CART)} className="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors text-sm font-medium">
+            <ArrowBigLeft className="w-4 h-4" />
+            Return to Cart
+          </button>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -470,26 +474,26 @@ console.log(response)
                   onValueChange={handlePaymentMethodChange}
                   className="space-y-4"
                 >
-                  <div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                  <div className="flex items-center space-x-2 border border-outline-variant p-4 hover:border-secondary cursor-pointer transition-colors">
                     <RadioGroupItem value="credit_card" id="credit_card" />
-                    <Label htmlFor="credit_card" className="flex items-center gap-2 cursor-pointer">
-                      <CreditCard className="w-5 h-5" />
+                    <Label htmlFor="credit_card" className="flex items-center gap-2 cursor-pointer text-on-surface">
+                      <CreditCard className="w-5 h-5 text-secondary" />
                       <span>Credit Card</span>
                     </Label>
                   </div>
 
-                  <div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                  <div className="flex items-center space-x-2 border border-outline-variant p-4 hover:border-secondary cursor-pointer transition-colors">
                     <RadioGroupItem value="paypal" id="paypal" />
-                    <Label htmlFor="paypal" className="flex items-center gap-2 cursor-pointer">
-                      <Wallet className="w-5 h-5" />
+                    <Label htmlFor="paypal" className="flex items-center gap-2 cursor-pointer text-on-surface">
+                      <Wallet className="w-5 h-5 text-secondary" />
                       <span>PayPal</span>
                     </Label>
                   </div>
 
-                  <div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                  <div className="flex items-center space-x-2 border border-outline-variant p-4 hover:border-secondary cursor-pointer transition-colors">
                     <RadioGroupItem value="cash_on_delivery" id="cash_on_delivery" />
-                    <Label htmlFor="cash_on_delivery" className="flex items-center gap-2 cursor-pointer">
-                      <Banknote className="w-5 h-5" />
+                    <Label htmlFor="cash_on_delivery" className="flex items-center gap-2 cursor-pointer text-on-surface">
+                      <Banknote className="w-5 h-5 text-secondary" />
                       <span>Cash on Delivery</span>
                     </Label>
                   </div>
@@ -523,7 +527,7 @@ console.log(response)
                 )}
 
                 {paymentMethod === 'paypal' && (
-                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                  <div className="mt-4 p-4 bg-surface-container border border-outline-variant">
                     {isPaypalVerified ? (
                       <div className="flex items-center gap-2 text-green-600">
                         <PaypalCheckout
@@ -554,8 +558,8 @@ console.log(response)
                 )}
 
                 {paymentMethod === 'cash_on_delivery' && (
-                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-600">
+                  <div className="mt-4 p-4 bg-surface-container border border-outline-variant">
+                    <p className="text-sm text-on-surface-variant">
                       Pay with cash upon delivery. Please have the exact amount ready.
                     </p>
                   </div>

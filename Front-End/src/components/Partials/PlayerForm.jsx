@@ -6,7 +6,7 @@ import { DialogFooter } from "@/components/ui/dialog";
 import Players from "../../../service/Players";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { PLAYERS } from "../../router/Router";
+import { PLAYERS } from "../../router/paths";
 
 const initialState = {
   full_name: "",

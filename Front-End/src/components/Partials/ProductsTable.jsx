@@ -18,7 +18,7 @@ import Loading from "./loading";
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
-import { PRODUCT_CREATE } from "../../router/Router";
+import { PRODUCT_CREATE } from "../../router/paths";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "../ui/alert-dialog";
 
 const tableVariants = {

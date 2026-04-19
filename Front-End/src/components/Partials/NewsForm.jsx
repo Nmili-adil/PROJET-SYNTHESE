@@ -10,7 +10,7 @@ import { NewsService } from '../../../service/newsService';
 import { useAdminContext } from '../../../api/context/AdminContext';
 import { DatePickerWithPresets } from "../ui/dataPicker";
 import { format } from "date-fns";
-import { ARTICLES_CONTENT } from "../../router/Router";
+import { ARTICLES_CONTENT } from "../../router/paths";
 // import NewsService from '../../../service/NewsService'
 
 const NewsForm = () => {

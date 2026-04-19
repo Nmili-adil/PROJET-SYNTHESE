@@ -1,27 +1,38 @@
-import React from 'react'
-import { motion } from "framer-motion";
-
-export default function Loading() {
-    const fillTextVariants = {
-        initial: { width: 0 },
-        animate: {
-          width: "100%",
-          transition: { duration: 2, ease: "easeOut", repeat: Infinity, repeatType: "loop" },
-        },
-      };  
-    
-      return (
-        <div className="relative w-full rounded-full overflow-hidden">
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-700 text-transparent"
-            variants={fillTextVariants}
-            initial="initial"
-            animate="animate"
+export default function Loading({ rows = 5, cols = 4 }) {
+  return (
+    <div className="w-full animate-pulse">
+      {/* Header */}
+      <div className="flex gap-4 px-4 py-3 border-b border-slate-200 dark:border-slate-700/50 mb-1">
+        {Array.from({ length: cols }).map((_, i) => (
+          <div
+            key={i}
+            className="h-3 rounded-md bg-slate-200 dark:bg-slate-700"
+            style={{ flex: i === 0 ? "0 0 28px" : 1, maxWidth: i === cols - 1 ? "90px" : undefined }}
           />
-          <div className="relative text-2xl font-semibold text-gray-800 dark:text-white rounded-full ps-4 items-center flex ">
-            Loading...
-          </div>
+        ))}
+      </div>
+      {/* Rows */}
+      {Array.from({ length: rows }).map((_, row) => (
+        <div
+          key={row}
+          className="flex gap-4 px-4 py-3.5 border-b border-slate-100 dark:border-slate-700/25"
+          style={{ opacity: 1 - row * 0.1 }}
+        >
+          {Array.from({ length: cols }).map((_, col) => (
+            <div
+              key={col}
+              className={`h-3.5 rounded-md ${
+                col === 0
+                  ? "bg-slate-150 dark:bg-slate-700/60 flex-none w-7"
+                  : col === cols - 1
+                  ? "bg-slate-100 dark:bg-slate-700/35 flex-none w-20"
+                  : "bg-slate-100 dark:bg-slate-700/45 flex-1"
+              }`}
+            />
+          ))}
         </div>
-      );
+      ))}
+    </div>
+  );
 }
 

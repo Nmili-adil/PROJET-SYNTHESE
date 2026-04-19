@@ -49,20 +49,20 @@ const ListeProducts = () => {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/products')
+    axios.get('/api/products')
       .then(response => setProducts(response.data))
       .catch(error => console.error("Erreur lors de la récupération des produits :", error));
      
   }, []);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/categories')
+    axios.get('/api/categories')
       .then(response => setCategories(response.data))
       .catch(error => console.error("Erreur lors de la récupération des catégories :", error));
   }, []);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/sub-categorie')
+    axios.get('/api/sub-categorie')
       .then(response => setSubcategories(response.data))
       .catch(error => console.error("Erreur lors de la récupération des sous-catégories :", error));
   }, []);

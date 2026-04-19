@@ -1,26 +1,9 @@
 import { useEffect, useState } from 'react';
 import CartService from '../../../service/Cart';
 import { useClientContext } from '../../../api/context/ClientContext';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { CHECKOUT, ALLPRODUCTS, LOGINSTORE } from '../../router/Router';
-import { Contact, Gift, PhoneCall, Trash, Truck, ArrowLeft } from 'lucide-react';
+import { Trash, ArrowLeft, Tag, ShoppingBag, Truck, Gift, Phone, MessageSquare } from 'lucide-react';
 import { useCartContext } from '../../../api/context/CartContext';
 import { toast } from 'react-hot-toast';
 
@@ -94,21 +77,21 @@ useEffect(()=>{
     switch (discountType) {
       case 'percentage':
         return (
-          <div className="flex justify-between mb-2 text-green-600">
+          <div className="flex justify-between text-sm text-green-400">
             <span>Discount ({discountValue}%)</span>
             <span>-${discountAmount.toFixed(2)}</span>
           </div>
         );
       case 'fixed_amount':
         return (
-          <div className="flex justify-between mb-2 text-green-600">
+          <div className="flex justify-between text-sm text-green-400">
             <span>Discount (Fixed Amount)</span>
             <span>-${discountAmount.toFixed(2)}</span>
           </div>
         );
       case 'free_shipping':
         return (
-          <div className="flex justify-between mb-2 text-green-600">
+          <div className="flex justify-between text-sm text-green-400">
             <span>Free Shipping Applied</span>
             <span>-${calculateShipping().toFixed(2)}</span>
           </div>
@@ -176,191 +159,211 @@ useEffect(()=>{
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-2">
-      <div className="mt-10 mx-auto flex flex-col md:flex-row gap-8 px-8">
-        <div className="w-full">
-          <Button
-            variant="outline"
+    <div className="min-h-screen bg-surface text-on-surface">
+      {/* Page Header */}
+      <div className="bg-surface-container-low border-b border-outline-variant px-8 py-12">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-xs text-secondary uppercase tracking-widest font-semibold mb-2">Store</p>
+          <h1 className="text-4xl md:text-5xl font-headline font-black uppercase tracking-tighter">Your Bag</h1>
+          <p className="text-on-surface-variant mt-2 text-sm">{items.length} item{items.length !== 1 ? 's' : ''} in your bag</p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 flex flex-col lg:flex-row gap-8">
+        {/* LEFT: Cart Items */}
+        <div className="flex-1 min-w-0">
+          <button
             onClick={() => navigate(ALLPRODUCTS)}
-            className="mb-4 flex items-center gap-2"
+            className="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors mb-6 text-sm"
           >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Products
-          </Button>
-          {/* Cart Table */}
-          <Card className="flex-1">
-            <CardHeader>
-              <CardTitle>Shopping Bag</CardTitle>
-              <div className="flex justify-between items-center">
-                <p className="text-gray-500">{items.length} items in your bag.</p>
-                {items.length > 0 && (
-                  <Button variant="destructive" size="sm" onClick={handleClearCart}>
-                    Clear Cart
-                  </Button>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent>
-              {loading ? (
-                <div className="flex justify-center items-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-                </div>
-              ) : items.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-gray-500 mb-4">Your shopping bag is empty</p>
-                  <Button onClick={() => navigate(ALLPRODUCTS)}>
-                    Continue Shopping
-                  </Button>
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Product</TableHead>
-                        <TableHead>Price</TableHead>
-                        <TableHead>Quantity</TableHead>
-                        <TableHead>Total Price</TableHead>
-                        <TableHead></TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {items.map((item) => (
-                        <TableRow key={item.id}>
-                          <TableCell>
-                            <div className="flex items-center gap-4">
-                              <img
-                                src={item.product?.images ? JSON.parse(item.product.images)[0] : ""}
-                                alt={item.product?.name}
-                                className="w-16 h-20 object-cover rounded"
-                              />
-                              <div>
-                                <div className="font-semibold truncate-cell">{item.product?.name}</div>
-                                <div className="text-xs text-gray-500">
-                                  Color: {item.color} | Size: {item.size || "N/A"}
-                                </div>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>${Number(item.product?.price).toFixed(2)}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Button
-                                size="icon"
-                                variant="outline"
-                                onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                                disabled={item.quantity <= 1}
-                              >-</Button>
-                              <span className="px-2">{item.quantity}</span>
-                              <Button
-                                size="icon"
-                                variant="outline"
-                                onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                              >+</Button>
-                            </div>
-                          </TableCell>
-                          <TableCell className="font-bold text-amber-600">
-                            ${(item.product?.price * item.quantity).toFixed(2)}
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              size="icon"
-                              variant="destructive"
-                              onClick={() => handleRemoveItem(item.id)}
-                            ><Trash />  </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+            <ArrowLeft size={16} /> Continue Shopping
+          </button>
+
+          <div className="border border-outline-variant">
+            {/* Table Header Row */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant bg-surface-container">
+              <h2 className="font-headline text-lg uppercase tracking-wide">Shopping Bag</h2>
+              {items.length > 0 && (
+                <button
+                  onClick={handleClearCart}
+                  className="text-xs text-red-400 hover:text-red-300 uppercase tracking-wider flex items-center gap-1.5 transition-colors"
+                >
+                  <Trash size={12} /> Clear All
+                </button>
               )}
-            </CardContent>
-          </Card>
+            </div>
+
+            {loading ? (
+              <div className="py-20 flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-secondary/30 border-t-secondary rounded-full animate-spin"></div>
+              </div>
+            ) : items.length === 0 ? (
+              <div className="py-24 text-center">
+                <ShoppingBag className="mx-auto mb-4 text-on-surface-variant" size={48} strokeWidth={1} />
+                <p className="text-on-surface-variant mb-2 font-medium">Your bag is empty</p>
+                <p className="text-on-surface-variant text-sm mb-8">Add items to get started</p>
+                <button
+                  onClick={() => navigate(ALLPRODUCTS)}
+                  className="px-8 py-3 bg-secondary text-on-secondary font-bold uppercase tracking-widest text-sm hover:bg-secondary-container transition-colors"
+                >
+                  Shop Now
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Column Headers */}
+                <div className="hidden md:grid grid-cols-[2fr_1fr_1fr_1fr_40px] px-6 py-3 border-b border-outline-variant text-xs text-on-surface-variant uppercase tracking-widest">
+                  <span>Product</span>
+                  <span>Price</span>
+                  <span>Quantity</span>
+                  <span>Total</span>
+                  <span></span>
+                </div>
+
+                {/* Items */}
+                {items.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className={`grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr_40px] items-center px-6 py-5 gap-4 hover:bg-surface-container transition-colors ${
+                      index < items.length - 1 ? 'border-b border-outline-variant' : ''
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-20 overflow-hidden bg-surface-container-high flex-shrink-0">
+                        <img
+                          src={item.product?.images ? JSON.parse(item.product.images)[0] : ''}
+                          alt={item.product?.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-sm leading-snug">{item.product?.name}</p>
+                        <p className="text-xs text-on-surface-variant mt-1">
+                          {item.color && `Color: ${item.color}`}
+                          {item.size ? ` · Size: ${item.size}` : ''}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className="text-sm font-medium">${Number(item.product?.price).toFixed(2)}</p>
+
+                    <div className="flex items-center border border-outline-variant w-fit">
+                      <button
+                        onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                        className="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high disabled:opacity-30 transition-colors text-lg"
+                      >−</button>
+                      <span className="w-10 text-center text-sm font-medium">{item.quantity}</span>
+                      <button
+                        onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                        className="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors text-lg"
+                      >+</button>
+                    </div>
+
+                    <p className="font-bold text-secondary text-sm">
+                      ${(item.product?.price * item.quantity).toFixed(2)}
+                    </p>
+
+                    <button
+                      onClick={() => handleRemoveItem(item.id)}
+                      className="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-red-400 transition-colors"
+                    >
+                      <Trash size={14} />
+                    </button>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
         </div>
 
-        {/* Sidebar */}
-        <div className="w-full md:w-96 flex-shrink-0">
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Calculated Shipping</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {!loading && items.length > 0 && (
+        {/* RIGHT: Summary */}
+        <div className="w-full lg:w-80 xl:w-96 flex-shrink-0 space-y-4">
+          {/* Order Summary Card */}
+          <div className="border border-outline-variant">
+            <div className="px-6 py-4 border-b border-outline-variant bg-surface-container">
+              <h3 className="font-headline uppercase tracking-wide text-base">Order Summary</h3>
+            </div>
+            <div className="px-6 py-5 space-y-4">
+              {!loading && items.length > 0 ? (
                 <>
-                  <h3 className="font-semibold mb-2">Coupon Code</h3>
-                  <div className="flex gap-2 mb-2">
-                    <Input
-                      type='text'
-                      className="flex-1"
-                      placeholder="Enter code"
-                      value={couponInput}
-                      onChange={(e) => setCouponInput(e.target.value)}
-                      disabled={!!coupon}
-                    />
-                    {coupon ? (
-                      <Button variant="destructive" onClick={handleRemoveCoupon}>
-                        Remove
-                      </Button>
-                    ) : (
-                      <Button variant="outline" onClick={handleAddCoupon}>
-                        Apply
-                      </Button>
+                  {/* Coupon */}
+                  <div className="pb-4 border-b border-outline-variant">
+                    <p className="text-xs text-on-surface-variant uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                      <Tag size={11} /> Coupon Code
+                    </p>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        className="flex-1 bg-surface-container border border-outline-variant px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-secondary transition-colors"
+                        placeholder="Enter code"
+                        value={couponInput}
+                        onChange={(e) => setCouponInput(e.target.value)}
+                        disabled={!!coupon}
+                      />
+                      {coupon ? (
+                        <button
+                          onClick={handleRemoveCoupon}
+                          className="px-3 py-2 text-xs text-red-400 border border-red-400/30 hover:bg-red-400/10 transition-colors uppercase tracking-wide"
+                        >Remove</button>
+                      ) : (
+                        <button
+                          onClick={handleAddCoupon}
+                          className="px-3 py-2 text-xs text-secondary border border-secondary/30 hover:bg-secondary/10 transition-colors uppercase tracking-wide"
+                        >Apply</button>
+                      )}
+                    </div>
+                    {coupon && (
+                      <p className="text-xs text-green-400 mt-2">✓ Coupon "{coupon}" applied</p>
                     )}
                   </div>
-                  {coupon && (
-                    <div className="text-sm text-green-600 mb-4">
-                      Coupon applied: {coupon}
-                    </div>
-                  )}
-                  <div className="border-t pt-4 mt-4">
-                    <div className="flex justify-between mb-2">
-                      <span>Cart Subtotal</span>
+
+                  {/* Totals */}
+                  <div className="space-y-2.5">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-on-surface-variant">Subtotal</span>
                       <span>${calculateSubtotal().toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between mb-2">
-                      <span>Shipping</span>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-on-surface-variant">Shipping</span>
                       <span>${calculateShipping().toFixed(2)}</span>
                     </div>
                     {renderDiscountInfo()}
-                    <div className="flex justify-between font-bold text-lg">
-                      <span>Cart Total</span>
-                      <span>${calculateTotal().toFixed(2)}</span>
+                    <div className="flex justify-between text-lg font-bold pt-3 border-t border-outline-variant">
+                      <span>Total</span>
+                      <span className="text-secondary">${calculateTotal().toFixed(2)}</span>
                     </div>
-                    <Button onClick={()=>navigate(CHECKOUT)} className="mt-6 w-full" variant="default">
-                      Checkout
-                    </Button>
                   </div>
+
+                  <button
+                    onClick={() => navigate(CHECKOUT)}
+                    className="w-full py-4 bg-secondary text-on-secondary font-bold uppercase tracking-widest text-sm hover:bg-secondary-container transition-colors"
+                  >
+                    Proceed to Checkout
+                  </button>
                 </>
+              ) : (
+                !loading && (
+                  <p className="text-center text-on-surface-variant py-4 text-sm">Add items to see summary</p>
+                )
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
           {/* Info Cards */}
-          <div className="grid grid-cols-2 gap-2">
-            <Card>
-              <CardContent className="flex items-center gap-2 p-3">
-                <span className="bg-amber-100 p-2 rounded-full"><Truck /></span>
-                <span className="text-xs font-semibold">Free Shipping</span>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="flex items-center gap-2 p-3">
-                <span className="bg-amber-100 p-2 rounded-full"><PhoneCall /></span>
-                <span className="text-xs font-semibold">Call Us Anytime</span>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="flex items-center gap-2 p-3">
-                <span className="bg-amber-100 p-2 rounded-full"><Contact /></span>
-                <span className="text-xs font-semibold">Chat With Us</span>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="flex items-center gap-2 p-3">
-                <span className="bg-amber-100 p-2 rounded-full"><Gift /></span>
-                <span className="text-xs font-semibold">Gift Cards</span>
-              </CardContent>
-            </Card>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { icon: Truck, label: 'Free Shipping', sub: 'On orders $50+' },
+              { icon: Phone, label: 'Call Us', sub: '+1 800 123 4567' },
+              { icon: MessageSquare, label: 'Live Chat', sub: '24/7 Support' },
+              { icon: Gift, label: 'Gift Cards', sub: 'Send a gift' },
+            ].map(({ icon: Icon, label, sub }) => (
+              <div key={label} className="border border-outline-variant p-4 hover:bg-surface-container transition-colors">
+                <Icon size={18} className="text-secondary mb-2" strokeWidth={1.5} />
+                <p className="text-xs font-semibold">{label}</p>
+                <p className="text-xs text-on-surface-variant mt-0.5">{sub}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
